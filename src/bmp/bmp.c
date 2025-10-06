@@ -44,7 +44,7 @@ int read_bmp(const char* filename, BMPImage* image) {
     }
 
     if (image -> infoHeader.bitCount != 8 && image -> infoHeader.bitCount != 24) {
-        fprintf(stderr, "Error: Only 8-bit and 24-bit images are supported.");
+        fprintf(stderr, "Error: Only 8-bit and 24-bit images are supported.\n");
         fclose(file);
         return 1;
     }
@@ -75,38 +75,38 @@ int read_bmp(const char* filename, BMPImage* image) {
     if (image -> infoHeader.bitCount == 8) {
         image -> colorTable = malloc(sizeof(BMPColor) * 256);
         if (image -> colorTable == NULL) {
-            fprintf(stderr, "Error: Cannot read palette\n");
+            fprintf(stderr, "Error: Cannot read palette.\n");
             fclose(file);
             return 1;
         }
 
         if (fread(image -> colorTable, sizeof(BMPColor), 256, file) != 256) {
-            fprintf(stderr, "Error: Base palette size mismatch 256\n");
+            fprintf(stderr, "Error: Base palette size mismatch 256.\n");
             free(image -> colorTable);
             return 1;
         }
     } else if (image -> infoHeader.bitCount != 24) {
-        fprintf(stderr, "Error: Unsupported BMP bit depth format\n");
+        fprintf(stderr, "Error: Unsupported BMP bit depth format.\n");
         fclose(file);
     }
 
     image -> data = malloc(image -> infoHeader.imageSize);
     if ((image -> data) == NULL) {
-        fprintf(stderr, "Error: memory allocation for pixel array failed\n");
+        fprintf(stderr, "Error: memory allocation for pixel array failed.\n");
         free_bmp(image);
         fclose(file);
         return 1;
     }
 
     if (fseek(file, image -> header.dataOffset, SEEK_SET) != 0) { // установка указателя с учётом начала чтения offset
-        fprintf(stderr, "Error: Failed to change pointer in file to start reading\n");
+        fprintf(stderr, "Error: Failed to change pointer in file to start reading.\n");
         free_bmp(image);
         fclose(file);
         return 1;
     }
 
     if (fread(image -> data, image -> infoHeader.imageSize, 1, file) != 1) {
-        fprintf(stderr, "Error: Failed to write pixel data\n");
+        fprintf(stderr, "Error: Failed to write pixel data.\n");
         free_bmp(image);
         fclose(file);
         return 1;
@@ -119,33 +119,33 @@ int read_bmp(const char* filename, BMPImage* image) {
 int write_bmp(const char* filename, const BMPImage* image) {
     FILE* file = fopen(filename, "wb");
     if (file == NULL) {
-        fprintf(stderr, "Error: Could not open file\n");
+        fprintf(stderr, "Error: Could not open file.\n");
         fclose(file);
         return 1;
     }
 
     if (fwrite(&image -> header, sizeof(BMPHeader), 1, file) != 1) {
-        fprintf(stderr, "Error: Failed to write header\n");
+        fprintf(stderr, "Error: Failed to write header.\n");
         fclose(file);
         return 1;
     }
 
     if (fwrite(&image -> infoHeader, sizeof(BMPInfoHeader), 1, file) != 1) {
-        fprintf(stderr, "Error: Failed to write information header\n");
+        fprintf(stderr, "Error: Failed to write information header.\n");
         fclose(file);
         return 1;
     }
 
     if (image -> infoHeader.bitCount == 8 && image -> colorTable != NULL) {
         if (fwrite(image -> colorTable, sizeof(BMPColor), 256, file) != 256) {
-            fprintf(stderr, "Error: Failed to save palette to file\n");
+            fprintf(stderr, "Error: Failed to save palette to file.\n");
             fclose(file);
             return 1;
         }
     }
 
     if (fwrite(image -> data, image -> infoHeader.imageSize, 1, file) != 1) {
-        fprintf(stderr, "Error: Failed to write pixel data\n");
+        fprintf(stderr, "Error: Failed to write pixel data.\n");
         fclose(file);
         return 1;
     }
