@@ -5,24 +5,24 @@
 #include <stdint.h>
 
 typedef struct {
-    uint16_t Signature;
-    uint32_t FileSize;
-    uint32_t Reserved;
-    uint32_t DataOffset;
+    uint16_t signature;
+    uint32_t fileSize;
+    uint32_t reserved;
+    uint32_t dataOffset;
 } BMPHeader;
 
 typedef struct {
-    uint32_t Size;
-    int32_t Width;
-    int32_t Height;
-    uint16_t Planes;
-    uint16_t BitCount;
-    uint32_t Compression;
-    uint32_t ImageSize;
-    int32_t XpixelsPerM;
-    int32_t YpixelsPerM;
-    uint32_t ColorsUsed;
-    uint32_t ColorsImportant;
+    uint32_t size;
+    int32_t width;
+    int32_t height;
+    uint16_t planes;
+    uint16_t bitCount;
+    uint32_t compression;
+    uint32_t imageSize;
+    int32_t xPixelsPerM;
+    int32_t yPixelsPerM;
+    uint32_t colorsUsed;
+    uint32_t colorsImportant;
 } BMPInfoHeader;
 
 typedef struct {
@@ -42,8 +42,11 @@ typedef struct {
     BMPHeader header;
     BMPInfoHeader infoHeader;
     BMPColor* colorTable; // для 8 bit
-    uint8_t* data; // для 8/24 bit
+    uint8_t* data; // для 8/24 bit запись пикселей
 } BMPImage;
 
 #pragma pack(pop); // возврат настроек 
 
+int read_bmp(const char* filename, BMPImage* image);
+
+int write_bmp(const char* filename, const BMPImage* image);
