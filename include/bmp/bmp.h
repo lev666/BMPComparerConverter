@@ -45,8 +45,10 @@ typedef struct {
     uint8_t* data; // для 8/24 bit запись пикселей
 } BMPImage;
 
-#pragma pack(pop); // возврат настроек 
+#pragma pack(pop) // возврат настроек 
 
 int read_bmp(const char* filename, BMPImage* image);
 
 int write_bmp(const char* filename, const BMPImage* image);
+
+void free_bmp(BMPImage* image);
