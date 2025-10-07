@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
     char* command = argv[1];
 
-    if (strcmp(command, "converter") != 0 && strcmp(command, "comparer") != 0) {
+    if (strcmp(command, "converter") != 0) {
         fprintf(stderr, "Error: Incorrect utility argument.\n");
         return 1;
     }
