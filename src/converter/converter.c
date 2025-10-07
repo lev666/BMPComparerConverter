@@ -40,11 +40,12 @@ int main(int argc, char** argv) {
 }
 
 int invert_bmp(BMPImage* image) {
+    int8_t rev = 0xFF; // 11111111
     if (image -> infoHeader.bitCount == 8) {
         for (size_t i = 0; i < 256; i++) {
-            image -> colorTable[i].blue = 255 - (image -> colorTable[i].blue);
-            image -> colorTable[i].green = 255 - (image -> colorTable[i].green);
-            image -> colorTable[i].red = 255 - (image -> colorTable[i].red);
+            image -> colorTable[i].blue = (image -> colorTable[i].blue) ^ rev;
+            image -> colorTable[i].green = (image -> colorTable[i].green) ^ rev;
+            image -> colorTable[i].red = (image -> colorTable[i].red) ^ rev;
         }
     } else if (image -> infoHeader.bitCount == 24) {
         int width = image -> infoHeader.width;
@@ -58,9 +59,9 @@ int invert_bmp(BMPImage* image) {
         for (size_t y = 0; y < height; y++) {
             CurrBMPPixel* row = (CurrBMPPixel*)(data_ptr + y * stride);
             for (size_t x = 0; x < width; x++) {
-                row[x].blue = 255 - row[x].blue;
-                row[x].green = 255 - row[x].green;
-                row[x].red = 255 - row[x].red;
+                row[x].blue = row[x].blue ^ rev;
+                row[x].green = row[x].green ^ rev;
+                row[x].red = row[x].red ^ rev;
             }
         }
     } else {
