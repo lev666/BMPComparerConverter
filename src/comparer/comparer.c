@@ -70,12 +70,17 @@ int first_check(BMPImage *image1, BMPImage *image2) {
 }
 
 int comparer(BMPImage *image1, BMPImage *image2) {
-    if (image1 -> infoHeader.bitCount == 24) {
+    if (image1 -> infoHeader.bitCount == 24 || image1 -> infoHeader.bitCount == 8) {
         int8_t diff_count = 0;
         size_t width = (size_t) image1 -> infoHeader.width;
         size_t height = (size_t) abs(image1 -> infoHeader.height);
 
-        int row_size = width * 3;
+        int row_size = 0;
+        if (image1 -> infoHeader.bitCount == 8) {
+            row_size = width;
+        } else {
+            row_size = width * 3;
+        }
         int padding = (4 - (row_size % 4)) % 4;
         int stride = row_size + padding;
 
@@ -91,13 +96,28 @@ int comparer(BMPImage *image1, BMPImage *image2) {
                     int y2 = flip_image2_rows ? (height - 1 - y) : y;
                     int y1 = flip_image1_rows ? (height - 1 - y) : y;
 
-                    CurrBMPPixel* row1 = (CurrBMPPixel*)(data_ptr1 + y1 * stride);
-                    CurrBMPPixel* row2 = (CurrBMPPixel*)(data_ptr2 + y2 * stride);
+                    uint8_t* row1_ptr = data_ptr1 + y1 * stride;
+                    uint8_t* row2_ptr = data_ptr2 + y2 * stride;
+
+                    CurrBMPPixel* row1 = (CurrBMPPixel*)(row1_ptr);
+                    CurrBMPPixel* row2 = (CurrBMPPixel*)(row2_ptr);
                     
                     for (size_t x = 0; x < width; x++) {
-                        int8_t xor_blue = row1[x].blue ^ row2[x].blue;
-                        int8_t xor_green = row1[x].green ^ row2[x].green;
-                        int8_t xor_red = row1[x].red ^ row2[x].red;
+                        int8_t xor_blue = 0;
+                        int8_t xor_green = 0;
+                        int8_t xor_red  = 0;
+                        if (image1 -> infoHeader.bitCount == 24) {
+                            xor_blue = row1[x].blue ^ row2[x].blue;
+                            xor_green = row1[x].green ^ row2[x].green;
+                            xor_red = row1[x].red ^ row2[x].red;
+                        } else {
+                            BMPColor colorTable1 = image1 -> colorTable[row1_ptr[x]];
+                            BMPColor colorTable2 = image2 -> colorTable[row2_ptr[x]];
+
+                            xor_blue = colorTable1.blue ^ colorTable2.blue;
+                            xor_green = colorTable1.green ^ colorTable2.green;
+                            xor_red = colorTable1.red ^ colorTable2.red;
+                        } 
                         if ((xor_blue | xor_green | xor_red) != 0) {
                             if (diff_count == 0) {
                                 fprintf(stderr, "Next pixels are different:\n");
@@ -108,13 +128,9 @@ int comparer(BMPImage *image1, BMPImage *image2) {
                                 return 2;
                             }
                         }
-                    }
                 }
+            }
         }
-    }
-
-    if (image1 -> infoHeader.bitCount == 8) {
-        return 0; // требуется реализация
     }
     fprintf(stdout, "Images are same\n");
     return 0;
