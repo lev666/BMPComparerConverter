@@ -8,15 +8,8 @@ int first_check(BMPImage *image1, BMPImage *image2);
 int comparer(BMPImage *image1, BMPImage *image2);
 
 int main(int argc, char** argv) {
-    if (argc != 4) {
+    if (argc != 3) {
         fprintf(stderr, "Error: Not enough arguments.\n");
-        return 1;
-    }
-
-    char* command = argv[1];
-
-    if (strcmp(command, "comparer") != 0) {
-        fprintf(stderr, "Error: Incorrect utility argument.\n");
         return 1;
     }
 
@@ -26,13 +19,13 @@ int main(int argc, char** argv) {
     BMPImage* image_per1 = &image1;
     BMPImage* image_per2 = &image2;
 
-    if (read_bmp(argv[2], image_per1) != 0) {
+    if (read_bmp(argv[1], image_per1) != 0) {
         fprintf(stderr, "Error: Unable to read file.\n");
         free_bmp(image_per1);
         return 1;
     }
 
-    if (read_bmp(argv[3], image_per2) != 0) {
+    if (read_bmp(argv[2], image_per2) != 0) {
         fprintf(stderr, "Error: Unable to read file.\n");
         free_bmp(image_per2);
         return 1;
@@ -51,6 +44,10 @@ int main(int argc, char** argv) {
         free_bmp(image_per2);
         return cmp_ret;
     }
+
+    free_bmp(image_per1);
+    free_bmp(image_per2);
+    return 0;
 }
 
 int first_check(BMPImage *image1, BMPImage *image2) {
@@ -106,7 +103,7 @@ int comparer(BMPImage *image1, BMPImage *image2) {
                                 fprintf(stderr, "Next pixels are different:\n");
                             }
                             if ((diff_count++) < 100) {
-                                fprintf(stderr, "x%-6d y%-6d\n", x, y);
+                                fprintf(stderr, "x%-6d y%-6d\n", (int) x, (int) y);
                             } else if (diff_count >= 100) {
                                 return 2;
                             }
