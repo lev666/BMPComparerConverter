@@ -55,9 +55,6 @@ int read_bmp(const char* filename, BMPImage* image) {
         return 1;
     }
 
-    image->colorTable = NULL;
-    image->data = NULL;
-
     /* Выравнивание для обоих случаев битности */
     int row_size = (image -> infoHeader.width) * ((image -> infoHeader.bitCount) / 8); // чтение строки
     int row_padding = (4 - (row_size % 4)) % 4;

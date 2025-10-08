@@ -13,8 +13,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    BMPImage image1;
-    BMPImage image2;
+    BMPImage image1 = {0};
+    BMPImage image2 = {0};
 
     BMPImage* image_per1 = &image1;
     BMPImage* image_per2 = &image2;

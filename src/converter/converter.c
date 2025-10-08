@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    BMPImage image;
+    BMPImage image = {0};
 
     if (read_bmp(argv[1], &image) != 0) {
         fprintf(stderr, "Error: Unable to read file.\n");
