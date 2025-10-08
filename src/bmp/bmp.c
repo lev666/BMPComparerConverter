@@ -59,16 +59,17 @@ int read_bmp(const char* filename, BMPImage* image) {
     image->data = NULL;
 
     /* Выравнивание для обоих случаев битности */
-    int stride = 0;
+    int row_size = (image -> infoHeader.width) * ((image -> infoHeader.bitCount) / 8); // чтение строки
+    int row_padding = (4 - (row_size % 4)) % 4;
+    int stride = row_padding + row_size;
     if (image -> infoHeader.imageSize == 0) {
-        int row_size = (image -> infoHeader.width) * ((image -> infoHeader.bitCount) / 8); // чтение строки
-        int row_padding = (4 - (row_size % 4)) % 4;
-        stride = row_padding + row_size;
         image -> infoHeader.imageSize = stride * abs(image -> infoHeader.height); // выравнивание байтов 
-    } else {
-        int row_size = image -> infoHeader.width * (image -> infoHeader.bitCount / 8);
-        int padding = (4 - (row_size % 4)) % 4;
-        stride = row_size + padding;
+    }
+
+    if (image -> infoHeader.imageSize > image -> header.fileSize) {
+        fprintf(stderr, "Error: Image size bigger than file size.\n");
+        fclose(file);
+        return 1;
     }
     
     /* Для 8 бит чтение */
@@ -142,6 +143,12 @@ int write_bmp(const char* filename, const BMPImage* image) {
             fclose(file);
             return 1;
         }
+    }
+
+    if (fseek(file, image -> header.dataOffset, SEEK_SET) != 0) {
+        fprintf(stderr, "Error: Failed to change pointer in file to start reading.\n");
+        fclose(file);
+        return 1;
     }
 
     if (fwrite(image -> data, image -> infoHeader.imageSize, 1, file) != 1) {
