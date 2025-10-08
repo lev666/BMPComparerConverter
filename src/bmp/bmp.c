@@ -20,7 +20,7 @@ int read_bmp(const char* filename, BMPImage* image) {
     }
 
     if (image -> header.signature != 0x4D42) {
-        fprintf(stderr, "Error: The signature %PRIu16 does not match 0x4D42.\n", image ->header.signature);
+        fprintf(stderr, "Error: The signature %d does not match 0x4D42.\n", image ->header.signature);
         fclose(file);
         return 1;
     }
