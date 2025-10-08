@@ -41,8 +41,8 @@ int invert_bmp(BMPImage* image) {
             image -> colorTable[i].red ^= rev;
         }
     } else if (image -> infoHeader.bitCount == 24) {
-        int width = image -> infoHeader.width;
-        int height = abs(image -> infoHeader.height);
+        unsigned int width = image -> infoHeader.width;
+        unsigned int height = abs(image -> infoHeader.height);
 
         int row_size = width * 3;
         int padding = (4 - (row_size % 4)) % 4;
