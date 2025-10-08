@@ -30,6 +30,9 @@ int main(int argc, char** argv) {
         free_bmp(&image);
         return 1;
     }
+
+    free_bmp(&image);
+    return 0;
 }
 
 int invert_bmp(BMPImage* image) {
