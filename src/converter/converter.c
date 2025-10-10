@@ -47,7 +47,7 @@ int invert_bmp(BMPImage *image) {
     unsigned int width = image->infoHeader.width;
     unsigned int height = abs(image->infoHeader.height);
 
-    int row_size = width * 3;
+    unsigned int row_size = width * 3;
     int padding = (4 - (row_size % 4)) % 4;
     int stride = row_size + padding; // выравнивание
 

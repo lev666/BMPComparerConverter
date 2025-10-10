@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void free_bmp(BMPImage *image);
-
 int read_bmp(const char *filename, BMPImage *image) {
   FILE *file = fopen(filename, "rb");
   size_t sSignature = sizeof(image->header.signature);
