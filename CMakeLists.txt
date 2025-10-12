@@ -12,3 +12,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE})
 
 add_subdirectory(src)
+
+add_custom_target(
+    testsCompConv ALL
+    COMMENT "\n\n"
+    COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/tests.sh
+)
