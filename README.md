@@ -1,5 +1,6 @@
 # BMPComparerConverter
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/lev666/BMPComparerConverter/blob/main/LICENSE)
+[![CodeFactor](https://www.codefactor.io/repository/github/lev666/bmpcomparerconverter/badge)](https://www.codefactor.io/repository/github/lev666/bmpcomparerconverter)
 
 A command-line utility to invert and compare raster images in the BMP format.
 
