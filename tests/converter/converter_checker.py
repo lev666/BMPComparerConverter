@@ -175,7 +175,7 @@ def validate_not_ok_test(
         img: Path,
         rcs: tuple[int, int],
         outs: tuple[str | None, str],
-        errs: tuple[str | None, str],
+        errs: tuple[str, str],
 ) -> bool:
     rc_correctly, rc_curr = rcs
     if rc_correctly != rc_curr:
