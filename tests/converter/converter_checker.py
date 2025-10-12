@@ -26,8 +26,8 @@ IMAGES_SAME_MESSAGE: Final[str] = "Images are same"
 
 
 async def start_all_tests(
-        testDataDir: Path, 
-        converter: Path, 
+        testDataDir: Path,
+        converter: Path,
         comparer: Path,
         ) -> int:
     ok_dir = Path.joinpath(testDataDir, NameTestsDir.OK.value)
@@ -35,10 +35,11 @@ async def start_all_tests(
     twice_dir = Path.joinpath(testDataDir, NameTestsDir.TWICE.value)
     fail_tests = await asyncio.gather(
         run_ok_tests(ok_dir, converter, comparer),
-        #run_n_ok_tests(n_ok_dir, converter, comparer),
-        #run_twice_tests(twice_dir, converter, comparer),
+        run_n_ok_tests(n_ok_dir, converter),
+        run_twice_tests(twice_dir, converter, comparer),
     )
     return sum(fail_tests)
+
 
 async def run_ok_tests(
         ok_dir: Path, 
@@ -73,9 +74,27 @@ async def run_ok_tests(
 async def run_n_ok_tests(
         n_ok_dir: Path, 
         converter: Path, 
-        comparer: Path,
         ) -> int:
-    pass
+    f_tests = 0
+    for test in sorted(map(lambda p: p.stem, n_ok_dir.iterdir())):
+        image_in = Path.joinpath(n_ok_dir, test, INPUT_IMAGE)
+        if not image_in.exists:
+            continue
+        image_out = Path.joinpath(n_ok_dir, test, OUTPUT_IMAGE)
+        rc_curr, out_curr, err_curr = await run_test(
+            converter, (image_in, image_out)
+        )
+        if not validate_not_ok_test(
+            test,
+            image_out,
+            (1, rc_curr),
+            ("", out_curr),
+            ("", err_curr),
+        ):
+            f_tests += 1
+        if image_out.exists():
+            image_out.unlink()
+    return f_tests
 
 
 async def run_twice_tests(
@@ -83,8 +102,34 @@ async def run_twice_tests(
         converter: Path, 
         comparer: Path,
         ) -> int:
-    pass
-
+    f_tests = 0
+    for test in sorted(map(lambda p: p.stem, twice_dir.iterdir())):
+        image_in = Path.joinpath(twice_dir, test, INPUT_IMAGE)
+        if not image_in.exists:
+            continue
+        image_out = Path.joinpath(twice_dir, test, OUTPUT_IMAGE)
+        image_out_twice = Path.joinpath(twice_dir, test, OUTPUT_TWICE_IMAGE)
+        rc_curr, out_curr, err_curr = await run_test(
+            converter, (image_in, image_out)
+        )
+        await run_test(
+            converter, (image_out, image_out_twice)
+        )
+        if not await validate_ok_test(
+            test,
+            comparer,
+            (image_in, image_out_twice),
+            (0, rc_curr),
+            ("", out_curr),
+            ("", err_curr),
+        ):
+            f_tests += 1
+        if image_out.exists():
+            image_out.unlink()
+        if image_out_twice.exists():
+            image_out_twice.unlink()
+        return f_tests
+        
 
 async def validate_ok_test(
         test_name: str,
@@ -125,15 +170,30 @@ async def validate_ok_test(
     return True
 
 
-async def validate_not_ok_test(
+def validate_not_ok_test(
         test_name: str,
-        comparer: Path,
-        imgs: tuple[Path, Path],
+        img: Path,
         rcs: tuple[int, int],
-        outs: tuple[str, str],
-        errs: tuple[str, str],
+        outs: tuple[str | None, str],
+        errs: tuple[str | None, str],
 ) -> bool:
-    pass
+    rc_correctly, rc_curr = rcs
+    if rc_correctly != rc_curr:
+        print(f"{Message_Err.MSG_FAILED.value} {test_name}: Return code {rc_correctly} != {rc_curr}")
+        return False
+    out_correctly, out_curr = outs
+    if out_correctly != out_curr:
+        print(f"{Message_Err.MSG_FAILED.value} {test_name}: incorrect stdout")
+        return False
+    
+    if not errs[1]:
+        print(f"{Message_Err.MSG_FAILED.value} {test_name}: incorrect stderr")
+        return False
+    if img.exists():
+        print(f"{Message_Err.MSG_FAILED.value} {test_name}: output file created in incorect scenario")
+        return False
+    print(f"{Message_Err.MSG_OK.value} {test_name}")
+    return True
 
 
 async def run_test(
