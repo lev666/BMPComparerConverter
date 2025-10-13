@@ -11,3 +11,9 @@ target_link_libraries(comparer PRIVATE bmp)
 target_compile_options(bmp PRIVATE -Wall -Wextra -Wpedantic -Werror)
 target_compile_options(comparer PRIVATE -Wall -Wextra -Wpedantic -Werror)
 target_compile_options(converter PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
+add_custom_target(
+    testsCompConv ALL
+    COMMENT "\n\n"
+    COMMAND sh ${CMAKE_SOURCE_DIR}/scripts/tests.sh
+)
