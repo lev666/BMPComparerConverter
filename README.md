@@ -1,3 +1,4 @@
+
 # BMPComparerConverter
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/lev666/BMPComparerConverter/blob/main/LICENSE)
 [![CodeFactor](https://www.codefactor.io/repository/github/lev666/bmpcomparerconverter/badge)](https://www.codefactor.io/repository/github/lev666/bmpcomparerconverter)
@@ -16,6 +17,7 @@ A command-line utility to invert and compare raster images in the BMP format.
 
 * A **C99 compatible compiler** (e.g., GCC, Clang, MSVC)
 
+* **Python** 3.13 (Python is required for the test system to function. The tests were written using version py 3.13.7)
 ## Installation and Build
 
 1.  **Clone the repository:**
@@ -34,6 +36,16 @@ A command-line utility to invert and compare raster images in the BMP format.
     ```
     ***
 *The executables will be available in the `build/src/` directory.*
+## Test coverage
+
+#### Also, when building via CMake, the project automatically runs basic coverage tests.
+
+You can **run the tests** separately using:
+
+**Run the tests script:**
+```sh
+bash scripts/tests.sh
+```
 ## Authors
 
 - [@lev666](https://www.github.com/lev666)
@@ -41,7 +53,7 @@ A command-line utility to invert and compare raster images in the BMP format.
 
 ## Usage/Examples
 
-After building the project, you will have two utilities: **converter** and **comparer**.
+#### After building the project, you will have two utilities: **converter** and **comparer**.
 ***
 
 - Inverting an Image (converter):
@@ -59,8 +71,7 @@ Takes two files to compare. If the files differ, the program will output the coo
 ```sh
 ./build/src/comparer image1.bmp image2.bmp
 ```
+
 ## License
 
 This project is licensed under the [MIT](https://github.com/lev666/BMPComparerConverter/blob/main/LICENSE)
-
-
