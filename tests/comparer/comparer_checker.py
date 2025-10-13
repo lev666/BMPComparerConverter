@@ -35,7 +35,8 @@ async def run_all_tests(comparer: Path,
     return sum(f_tests)
 
 
-async def run_same_tests(comparer: Path, tests_dir: Path):
+async def run_same_tests(comparer: Path, 
+    tests_dir: Path) -> int:
     f_tests = 0
     for test in sorted(map(lambda p: p.stem,
     tests_dir.iterdir())):
@@ -57,11 +58,12 @@ async def run_same_tests(comparer: Path, tests_dir: Path):
             ("", err_curr),
         ):
             f_tests += 1
-        return f_tests
+    return f_tests
         
 
 
-async def run_diff_tests(comparer: Path, tests_dir: Path):
+async def run_diff_tests(comparer: Path,
+    tests_dir: Path) -> int:
     f_tests = 0
     for test in sorted(map(lambda p: p.stem,
     tests_dir.iterdir())):
@@ -91,7 +93,7 @@ async def run_diff_tests(comparer: Path, tests_dir: Path):
             (err_correctly, err_curr),
         ):
             f_tests += 1
-        return f_tests
+    return f_tests
 
 
 
