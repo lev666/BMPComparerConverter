@@ -88,14 +88,12 @@ int comparer(BMPImage *image1, BMPImage *image2) {
     uint8_t *data_ptr1 = image1->data;
     uint8_t *data_ptr2 = image2->data;
 
-    int flip_image2_rows =
-        (image1->infoHeader.height > 0) == (image2->infoHeader.height < 0);
-    int flip_image1_rows =
-        (image1->infoHeader.height < 0) == (image2->infoHeader.height > 0);
+    int flip_image_rows =
+        (image1->infoHeader.height > 0) != (image2->infoHeader.height > 0);
 
     for (size_t y = 0; y < height; y++) {
-      size_t y2 = flip_image2_rows ? (height - 1 - y) : y;
-      size_t y1 = flip_image1_rows ? (height - 1 - y) : y;
+      size_t y2 = flip_image_rows ? (height - 1 - y) : y;
+      size_t y1 = y;
 
       uint8_t *row1_ptr = data_ptr1 + y1 * stride;
       uint8_t *row2_ptr = data_ptr2 + y2 * stride;
