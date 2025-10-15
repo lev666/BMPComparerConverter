@@ -162,9 +162,13 @@ int write_bmp(const char *filename, const BMPImage *image) {
 
 void free_bmp(BMPImage *image) {
   if (image != NULL) {
-    free(image->data);
-    free(image->colorTable);
-    image->colorTable = NULL;
-    image->data = NULL;
+    if (image->data != NULL) {
+      free(image->data);
+      image->data = NULL;
+    }
+    if (image->colorTable != NULL) {
+      free(image->colorTable);
+      image->colorTable = NULL;
+    }
   }
 }
