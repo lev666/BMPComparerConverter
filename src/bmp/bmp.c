@@ -83,7 +83,6 @@ int read_bmp(const char *filename, BMPImage *image) {
 
     if (fread(image->colorTable, sizeof(BMPColor), 256, file) != 256) {
       fprintf(stderr, "Error: Base palette size mismatch 256.\n");
-      free(image->colorTable);
       return 1;
     }
   } else if (image->infoHeader.bitCount != 24) {
@@ -94,7 +93,6 @@ int read_bmp(const char *filename, BMPImage *image) {
   image->data = malloc(image->infoHeader.imageSize);
   if ((image->data) == NULL) {
     fprintf(stderr, "Error: memory allocation for pixel array failed.\n");
-    free_bmp(image);
     fclose(file);
     return 1;
   }
@@ -103,14 +101,12 @@ int read_bmp(const char *filename, BMPImage *image) {
       0) { // установка указателя с учётом начала чтения offset
     fprintf(stderr,
             "Error: Failed to change pointer in file to start reading.\n");
-    free_bmp(image);
     fclose(file);
     return 1;
   }
 
   if (fread(image->data, image->infoHeader.imageSize, 1, file) != 1) {
     fprintf(stderr, "Error: Failed to write pixel data.\n");
-    free_bmp(image);
     fclose(file);
     return 1;
   }
