@@ -15,9 +15,11 @@ A command-line utility to invert and compare raster images in the BMP format.
 ## Prerequisites
 * **CMake** >= 3.7
 
-* A **C99 compatible compiler** (e.g., GCC, Clang, MSVC)
+* A **C99 compatible compiler:** (e.g., GCC, Clang, MSVC)
 
-* **Python** 3.13 (Python is required for the test system to function. The tests were written using version py 3.13.7)
+* **Python:** 3.13 (Python is required for the test system to function. The tests were written using version py 3.13.7)
+
+* **AddressSanitizer:** The AddressSanitizer library must be pre-installed.
 ## Installation and Build
 
 1.  **Clone the repository:**
