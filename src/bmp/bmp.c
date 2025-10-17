@@ -83,6 +83,7 @@ int read_bmp(const char *filename, BMPImage *image) {
 
     if (fread(image->colorTable, sizeof(BMPColor), 256, file) != 256) {
       fprintf(stderr, "Error: Base palette size mismatch 256.\n");
+      fclose(file);
       return 1;
     }
   } else if (image->infoHeader.bitCount != 24) {

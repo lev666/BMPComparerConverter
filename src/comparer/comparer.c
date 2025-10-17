@@ -21,13 +21,15 @@ int main(int argc, char **argv) {
 
   if (read_bmp(argv[1], image_per1) != 0) {
     fprintf(stderr, "Error: Unable to read file.\n");
-    free_bmp(image_per1);
+    free_bmp(&image1);
+    free_bmp(&image2);
     return 1;
   }
 
   if (read_bmp(argv[2], image_per2) != 0) {
     fprintf(stderr, "Error: Unable to read file.\n");
-    free_bmp(image_per2);
+    free_bmp(&image1);
+    free_bmp(&image2);
     return 1;
   }
 
